@@ -70,8 +70,8 @@ server {
     proxy_redirect off; 
     proxy_pass http://unicorn;
     
-    proxy_cache_revalidate on;
-    proxy_ignore_headers "Set-Cookie";
+    proxy_cache_revalidate on;                   // директива отвечает за инвалидацию кэша 
+    proxy_ignore_headers "Set-Cookie";           // игнорируем сессионные куки, чтобы на все запросы не возвращались одни и те же куки другой сессии
     
     proxy_cache cache;
     proxy_cache_valid 2h;
