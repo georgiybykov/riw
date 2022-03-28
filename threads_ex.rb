@@ -1,34 +1,33 @@
 # Load CPU:
 
 Benchmark.realtime { (0..10000000).to_a.shuffle!.take(10000) }
-#=> 0.7709245270234533 
+#=> 0.9109946360113099 
 
 Benchmark.realtime do
   Thread.new do
     (0..10000000).to_a.shuffle!.take(10000)
-  end
+  end.join
 end
-#=> 0.00011511699995025992
+#=> 0.8999259299598634 
 
 #######
 
 # Database access (i/o bound):
 
 Benchmark.realtime do
-  Thread.new do
-    100.times do |n|
+  100.times do |n|
+    Thread.new do
       Order.find_by(id: n)
-      
+    
       ActiveRecord::Base.clear_active_connections!
-    end
+    end.join
   end
 end
-#=> 3.6922021536156535e-05
+#=> 0.42176513298181817
 
 Benchmark.realtime do
   100.times do |n|
     Order.find_by(id: n)
   end  
 end
-#=> 0.13807300699409097
-
+#=> 0.3844286390230991
